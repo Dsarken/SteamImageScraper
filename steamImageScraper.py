@@ -1,6 +1,7 @@
 import csv
 import time
 import tkinter as tk
+from tqdm import tqdm
 from selenium import webdriver
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -37,6 +38,8 @@ def scrape_images():
 
     # Creating a list to store the image urls
     image_urls = []
+    # Creating a progress bar to show time left for scraping
+    progress_bar = tqdm(total=limit)
 
     # Scrolling down the page until the desired number of images is reached or no more images are loaded
     while len(image_urls) < limit:
@@ -47,6 +50,7 @@ def scrape_images():
             url = image.get_attribute("src")
             if url not in image_urls:
                 image_urls.append(url)
+                progress_bar.update(1)
                 if len(image_urls) == limit:
                     break
         # If the desired limit has been reached or no more images are available, break out of the loop
@@ -57,6 +61,7 @@ def scrape_images():
         # Waiting for up to 10 seconds until more images are loaded on the page
         time.sleep(10)
 
+    progress_bar.close()
     # Closing the driver
     driver.close()
 
