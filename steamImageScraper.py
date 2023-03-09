@@ -8,6 +8,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
 
+def clear_entry():
+    url_entry.delete(0, tk.END)
+    limit_entry.delete(0, tk.END)
+
+
 def scrape_images():
     # Getting url and limit from user
     url = url_entry.get()
@@ -99,5 +104,8 @@ limit_entry.pack(side=tk.LEFT)
 scrape_button = tk.Button(root, text="Scrape Images", command=scrape_images)
 scrape_button.pack(side=tk.LEFT)
 
+# Creating a button to clear previous input
+clear_button = tk.Button(root, text="Clear", command=clear_entry)
+clear_button.pack()
 # Starting the GUI event loop
 root.mainloop()
