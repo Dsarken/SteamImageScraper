@@ -1,6 +1,9 @@
+import os
+import urllib.request
 import csv
 import time
 import tkinter as tk
+from tkinter import ttk
 from tqdm import tqdm
 from selenium import webdriver
 from selenium.common import NoSuchElementException
@@ -67,10 +70,10 @@ def scrape_images():
         time.sleep(10)
 
     progress_bar.close()
-    # Closing the driver
+    # Close the driver
     driver.close()
 
-    # Creating the filename for the CSV file
+    # Creating the filename for the CSV file, the game title from the page is used
     filename = f"{game_title}_images.csv"
 
     # Writing the image urls to a csv file with one url per line
@@ -78,10 +81,23 @@ def scrape_images():
         writer = csv.writer(f)
         for url in image_urls:
             writer.writerow([url])
+    # Downloading images if the download checkbox is checked
+    if download_var.get() == 1:
+        directory = f"{game_title}_images"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        for i, url in enumerate(image_urls):
+            # Creating a filename for each image, it's simply a number
+            filename = os.path.join(directory, f"{i + 1}.jpg")
+            # Downloading each image
+            urllib.request.urlretrieve(url, filename)
 
 
 # Creating the GUI
 root = tk.Tk()
+style = ttk.Style()
+style.theme_use("vista")
 root.title("Steam Image Scraper")
 
 # Creating a label and entry for the url input
@@ -91,21 +107,29 @@ url_example = tk.Label(root, text="Example URLs: \nhttps://steamcommunity.com/ap
 url_example.pack(side=tk.TOP)
 url_label = tk.Label(root, text="Enter url for steam images:")
 url_label.pack(side=tk.LEFT)
-url_entry = tk.Entry(root)
+url_entry = ttk.Entry(root)
 url_entry.pack(side=tk.LEFT)
 
 # Creating a label and entry for the limit input
 limit_label = tk.Label(root, text="Enter the maximum number of images to scrape:")
 limit_label.pack(side=tk.LEFT)
-limit_entry = tk.Entry(root)
+limit_entry = ttk.Entry(root)
 limit_entry.pack(side=tk.LEFT)
 
 # Creating a button to initiate the scraping process
-scrape_button = tk.Button(root, text="Scrape Images", command=scrape_images)
+scrape_button = ttk.Button(root, text="Scrape Images", command=scrape_images)
 scrape_button.pack(side=tk.LEFT)
 
 # Creating a button to clear previous input
-clear_button = tk.Button(root, text="Clear", command=clear_entry)
+clear_button = ttk.Button(root, text="Clear", command=clear_entry)
 clear_button.pack()
+
+# Creating a variable to keep track of the checkbox state
+download_var = tk.BooleanVar()
+
+# Creating a checkbox to choose whether to download the images
+download_checkbox = ttk.Checkbutton(root, text="Download Images", variable=download_var)
+download_checkbox.pack(side=tk.LEFT)
+
 # Starting the GUI event loop
 root.mainloop()
