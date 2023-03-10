@@ -4,7 +4,7 @@ A Python script that scrapes images from the Artwork/ScreenShots tabs of Steam g
 
 ## Description
 
-This script uses Selenium library to scrape images from Steam games given a URL from Artwork/ScreenShots. It does not use BeautifulSoup or any other parsing library. It scrapes the image URLs directly from the source code of the web pages. It saves the image URLS in a CSV file named after the game title.
+This script uses Selenium library to scrape images from Steam games given a URL from Artwork/ScreenShots. It does not use BeautifulSoup or any other parsing library. It scrapes the image URLs directly from the source code of the web pages. It saves the image URLS in a CSV file named after the game title. You can also tick a box to download the scraped images locally in a folder that's named after the game you scraped the images from
 
 ## Usage
 
