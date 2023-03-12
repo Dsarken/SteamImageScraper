@@ -67,7 +67,7 @@ def scrape_images():
         # Scrolling down by one-page height
         driver.execute_script("window.scrollBy(0, window.innerHeight);")
         # Waiting for up to 10 seconds until more images are loaded on the page
-        time.sleep(10)
+        time.sleep(3)
 
     progress_bar.close()
     # Close the driver
