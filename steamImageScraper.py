@@ -4,6 +4,7 @@ import csv
 import time
 import tkinter as tk
 from tkinter import ttk
+from tkinter.messagebox import showinfo
 from tqdm import tqdm
 from selenium import webdriver
 from selenium.common import NoSuchElementException
@@ -72,7 +73,8 @@ def scrape_images():
     progress_bar.close()
     # Close the driver
     driver.close()
-
+    # Show pop up when scraping is finished
+    showinfo("Message", "Done!")
     # Creating the filename for the CSV file, the game title from the page is used
     filename = f"{game_title}_images.csv"
 
