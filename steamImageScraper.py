@@ -21,12 +21,11 @@ def scrape_images():
     # Getting url and limit from user
     url = url_entry.get()
     limit = int(limit_entry.get())
-
-    # Setting up the edge driver
-    driver = webdriver.Edge()
-
-    # Opening the website
-    driver.get(url)
+    # Setting up the edge driver to run headless
+    options = webdriver.EdgeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--log-level=SEVERE')
+    driver = webdriver.Edge(options=options)
 
     try:
         day = Select(driver.find_element(By.ID, "ageDay"))
@@ -39,12 +38,14 @@ def scrape_images():
     except NoSuchElementException:
         pass
 
-    # Extracting the game title from the page
-    game_title = driver.find_element(By.CSS_SELECTOR, "#ModalContentContainer > div.apphub_background > "
-                                                      "div.apphub_HomeHeader > div.apphub_HomeHeaderContent > "
-                                                      "div.apphub_HeaderTop > div.apphub_AppDetails > "
-                                                      "div.apphub_AppName.ellipsis").text
-
+    try:
+        # Extracting the game title from the page
+        game_title = driver.find_element(By.CSS_SELECTOR, "#ModalContentContainer > div.apphub_background > "
+                                         "div.apphub_HomeHeader > div.apphub_HomeHeaderContent > "
+                                         "div.apphub_HeaderTop > div.apphub_AppDetails > "
+                                         "div.apphub_AppName.ellipsis").text
+    except NoSuchElementException:
+        print("Game title not found")
     # Creating a list to store the image urls
     image_urls = []
     # Creating a progress bar to show time left for scraping
@@ -53,7 +54,8 @@ def scrape_images():
     # Scrolling down the page until the desired number of images is reached or no more images are loaded
     while len(image_urls) < limit:
         # Finding all the images on the page
-        images = driver.find_elements(By.CLASS_NAME, "apphub_CardContentPreviewImage")
+        images = driver.find_elements(
+            By.CLASS_NAME, "apphub_CardContentPreviewImage")
         # Getting the urls of each image and appending them to the list if not already present
         for image in images:
             url = image.get_attribute("src")
@@ -113,7 +115,8 @@ url_entry = ttk.Entry(root)
 url_entry.pack(side=tk.LEFT)
 
 # Creating a label and entry for the limit input
-limit_label = tk.Label(root, text="Enter the maximum number of images to scrape:")
+limit_label = tk.Label(
+    root, text="Enter the maximum number of images to scrape:")
 limit_label.pack(side=tk.LEFT)
 limit_entry = ttk.Entry(root)
 limit_entry.pack(side=tk.LEFT)
@@ -130,7 +133,8 @@ clear_button.pack()
 download_var = tk.BooleanVar()
 
 # Creating a checkbox to choose whether to download the images
-download_checkbox = ttk.Checkbutton(root, text="Download Images", variable=download_var)
+download_checkbox = ttk.Checkbutton(
+    root, text="Download Images", variable=download_var)
 download_checkbox.pack(side=tk.LEFT)
 
 # Starting the GUI event loop
